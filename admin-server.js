@@ -8,16 +8,16 @@ var app = express();
 
 // Set the view engine to use EJS as well as set the default views directory
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/public/views/');
+app.set('views', __dirname + '/admin/views/');
 
 // This tells Express out of which directory to serve static assets like CSS and images
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/admin'));
 
 // These two variables we’ll get from our Auth0 MovieAnalyst-Website Client.
 // Head over the the management dashboard at https://manage.auth0.com
 // Find the MovieAnalyst Website Client and copy and paste the Client ID and Secret
-var NON_INTERACTIVE_CLIENT_ID = 'PxpZTHsanz6Mbf8jeHjmRxkmHU49AGXC';
-var NON_INTERACTIVE_CLIENT_SECRET = process.env.CLIENT_SECRET;
+var NON_INTERACTIVE_CLIENT_ID = 'HR1CK4nea9LHJRmXKBH08NUyTFUyN2WR';
+var NON_INTERACTIVE_CLIENT_SECRET = process.env.ADMIN_SECRET;
 
 // Next, we’ll define an object that we’ll use to exchange our credentials for an access token.
 var authData = {
@@ -37,6 +37,7 @@ function getAccessToken(req, res, next) {
         .send(authData)
         .then(res => {
             if(res.body.access_token){
+                //console.log(res.body)
                 req.access_token = res.body.access_token;
                 next();
             } else {
@@ -60,7 +61,7 @@ app.get('/movies', getAccessToken, function (req, res) {
         .end(function (err, data) {
             
             if (data.status == 403) {
-                res.send(403, '403 Forbidden');
+                res.status(403).send('403 Forbidden');
             } else {
                 var movies = data.body;
                 res.render('movies', { movies: movies });
@@ -76,7 +77,7 @@ app.get('/authors', getAccessToken, function (req, res) {
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
-                res.send(403, '403 Forbidden');
+                res.status(403).send('403 Forbidden');
             } else {
                 var authors = data.body;
                 res.render('authors', { authors: authors });
@@ -90,7 +91,7 @@ app.get('/publications', getAccessToken, function (req, res) {
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
-                res.send(403, '403 Forbidden');
+                res.status(403).send('403 Forbidden');
             } else {
                 var publications = data.body;
                 res.render('publications', { publications: publications });
@@ -105,7 +106,9 @@ app.get('/pending', getAccessToken, function (req, res) {
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
-                res.send(403, '403 Forbidden');
+                res.status(403).send('403 Forbidden');
+            } else{
+                res.status(200).send("how did this happen");
             }
         })
 })
