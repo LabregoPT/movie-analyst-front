@@ -108,7 +108,8 @@ app.get('/pending', getAccessToken, function (req, res) {
             if (data.status == 403) {
                 res.status(403).send('403 Forbidden');
             } else{
-                res.status(200).send("how did this happen");
+                var pending = data.body;
+                res.render('pending', {movies: pending})
             }
         })
 })
