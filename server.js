@@ -1,6 +1,7 @@
 // Declare our dependencies
 var express = require('express');
 var request = require('superagent');
+require('dotenv').config();
 
 // Create our express app
 var app = express();
@@ -15,15 +16,15 @@ app.use(express.static(__dirname + '/public'));
 // These two variables we’ll get from our Auth0 MovieAnalyst-Website Client.
 // Head over the the management dashboard at https://manage.auth0.com
 // Find the MovieAnalyst Website Client and copy and paste the Client ID and Secret
-var NON_INTERACTIVE_CLIENT_ID = 'YOUR-AUTH0-CLIENT-ID';
-var NON_INTERACTIVE_CLIENT_SECRET = 'YOUR-AUTH0-CLIENT-SECRET';
+var NON_INTERACTIVE_CLIENT_ID = 'PxpZTHsanz6Mbf8jeHjmRxkmHU49AGXC';
+var NON_INTERACTIVE_CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 // Next, we’ll define an object that we’ll use to exchange our credentials for an access token.
 var authData = {
     client_id: NON_INTERACTIVE_CLIENT_ID,
     client_secret: NON_INTERACTIVE_CLIENT_SECRET,
     grant_type: 'client_credentials',
-    audience: 'https://movieanalyst.com'
+    audience: 'analyst_api_id'
 }
 
 // We’ll create a middleware to make a request to the oauth/token Auth0 API with our authData we created earlier.
@@ -34,14 +35,15 @@ function getAccessToken(req, res, next) {
     request
         .post("https://dev-5lh8pmfhr4e8svyt.us.auth0.com/oauth/token")
         .send(authData)
-        .end(function (err, res) {
-            if (req.body.access_token) {
+        .then(res => {
+            if(res.body.access_token){
                 req.access_token = res.body.access_token;
                 next();
             } else {
                 res.send(401, 'Unauthorized');
             }
         })
+
 }
 
 // The homepage route of our application does not interface with the MovieAnalyst API and is always accessible. We won’t use the getAccessToken middleware here. We’ll simply render the index.ejs view.
@@ -56,6 +58,7 @@ app.get('/movies', getAccessToken, function (req, res) {
         .get('http://localhost:8080/movies')
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
+            
             if (data.status == 403) {
                 res.send(403, '403 Forbidden');
             } else {
