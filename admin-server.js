@@ -16,7 +16,7 @@ app.use(express.static(__dirname + '/admin'));
 // These two variables we’ll get from our Auth0 MovieAnalyst-Website Client.
 // Head over the the management dashboard at https://manage.auth0.com
 // Find the MovieAnalyst Website Client and copy and paste the Client ID and Secret
-var NON_INTERACTIVE_CLIENT_ID = 'HR1CK4nea9LHJRmXKBH08NUyTFUyN2WR';
+var NON_INTERACTIVE_CLIENT_ID = process.env.ADMIN_ID;
 var NON_INTERACTIVE_CLIENT_SECRET = process.env.ADMIN_SECRET;
 
 // Next, we’ll define an object that we’ll use to exchange our credentials for an access token.
@@ -115,4 +115,5 @@ app.get('/pending', getAccessToken, function (req, res) {
 })
 
 // Our MovieAnalyst Website will listen on port 3000. Feel free to change this as you see fit, just know that you can’t have multiple processes listening on the same port.
-app.listen(3000);
+var ret = app.listen(3001);
+module.exports = ret;

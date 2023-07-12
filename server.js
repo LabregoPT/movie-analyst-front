@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/public'));
 // These two variables we’ll get from our Auth0 MovieAnalyst-Website Client.
 // Head over the the management dashboard at https://manage.auth0.com
 // Find the MovieAnalyst Website Client and copy and paste the Client ID and Secret
-var NON_INTERACTIVE_CLIENT_ID = 'PxpZTHsanz6Mbf8jeHjmRxkmHU49AGXC';
+var NON_INTERACTIVE_CLIENT_ID = process.env.CLIENT_ID;
 var NON_INTERACTIVE_CLIENT_SECRET = process.env.CLIENT_SECRET;
 
 // Next, we’ll define an object that we’ll use to exchange our credentials for an access token.
