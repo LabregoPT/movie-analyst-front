@@ -1,0 +1,12 @@
+name: Backend CI Pipeline
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs: Test Pipeline
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Hello world!"
+        run: echo "Hello world!"
