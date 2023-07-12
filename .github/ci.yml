@@ -1,8 +1,8 @@
 name: Backend CI Pipeline
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - "feature/*"
 
 jobs: Test Pipeline
   test:
