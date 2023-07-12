@@ -3,6 +3,8 @@ var express = require('express');
 var request = require('superagent');
 require('dotenv').config();
 
+var api_host = process.env.API_HOST;
+
 // Create our express app
 var app = express();
 
@@ -56,7 +58,7 @@ app.get('/', function (req, res) {
 // Once the request is sent out, our API will validate that the access_token has the right scope to request the /movies resource and if it does, will return the movie data. We’ll take this movie data, and pass it alongside our movies.ejs template for rendering
 app.get('/movies', getAccessToken, function (req, res) {
     request
-        .get('http://localhost:8080/movies')
+        .get(api_host + '/movies')
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             
@@ -73,7 +75,7 @@ app.get('/movies', getAccessToken, function (req, res) {
 // The key difference on the authors route, is that for our client, we’re naming the route /authors, but our API endpoint is /reviewers. Our route on the client does not have to match the API endpoint route.
 app.get('/authors', getAccessToken, function (req, res) {
     request
-        .get('http://localhost:8080/reviewers')
+        .get(api_host + '/reviewers')
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
@@ -87,7 +89,7 @@ app.get('/authors', getAccessToken, function (req, res) {
 
 app.get('/publications', getAccessToken, function (req, res) {
     request
-        .get('http://localhost:8080/publications')
+        .get(api_host + '/publications')
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
@@ -102,7 +104,7 @@ app.get('/publications', getAccessToken, function (req, res) {
 // We’ve added the pending route, but calling this route from the MovieAnalyst Website will always result in a 403 Forbidden error as this client does not have the admin scope required to get the data.
 app.get('/pending', getAccessToken, function (req, res) {
     request
-        .get('http://localhost:8080/pending')
+        .get(api_host+'/pending')
         .set('Authorization', 'Bearer ' + req.access_token)
         .end(function (err, data) {
             if (data.status == 403) {
