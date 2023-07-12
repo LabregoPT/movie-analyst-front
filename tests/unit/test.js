@@ -7,7 +7,6 @@ var request = require('supertest');
 var userURL = "http://localhost:3000";
 var adminURL = "http://localhost:3001";
 
-jest.mock
 
 describe("Test GET on user index endpoint", () => {
     it("should return 200 on index", async () => {
