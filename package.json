@@ -4,7 +4,10 @@
   "description": "Front module for the Movie Analyst app. Includes both the admin and user clients",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "adminrun": "node admin-server",
+    "clientrun": "node server",
+    "test-unit": "jest tests/unit/test.js",
+    "test-integration": "echo \"Error, integration test not found\""
   },
   "author": "Jhon Edward Mora Mora",
   "license": "ISC",
@@ -13,5 +16,10 @@
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "superagent": "^8.0.9"
+  },
+  "devDependencies": {
+    "jest": "^29.6.1",
+    "mirage": "^0.0.7",
+    "supertest": "^6.3.3"
   }
 }
