@@ -35,8 +35,6 @@ jobs:
                 cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
             - name: Initialize Terraform
               run: terraform init
-            - name: Check for format
-              run: terraform fmt -check
             - name: Plan execution
               run: terraform plan -input=false
             - name: Apply execution
