@@ -17,16 +17,27 @@ jobs:
               run: |
                 npm update
                 npm install
-#            - name: Install Zip
-#              uses: montudor/action-zip@v1
-#            - name: Zip artifact
-#              run: zip -qq -r front.zip 
             - name: Upload artifact
               uses: actions/upload-artifact@v3
               with:
                 name: latest
                 path: .
-            - name: Check artifact
-              run: |
-                pwd
-                dir
+    deploy-infrastructure:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout Infra code
+              uses: actions/checkout@v3
+              with:
+                repository: 'LabregoPT/movie-analyst-infra'
+            - name: Setup Terraform
+              uses: hashicorp/setup-terraform@v1
+              with:
+                cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+            - name: Initialize Terraform
+              run: terraform init
+            - name: Check for format
+              run: terraform fmt -check
+            - name: Plan execution
+              run: terraform plan -input=false
+            - name: Apply execution
+              run: terraform apply -auto-approve -input=false
