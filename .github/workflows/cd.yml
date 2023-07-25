@@ -38,7 +38,7 @@ jobs:
             - name: Plan execution
               run: terraform plan -input=false
               env:
-                aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
-                aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
+                TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
             - name: Apply execution
               run: terraform apply -auto-approve -input=false
