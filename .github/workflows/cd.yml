@@ -58,6 +58,3 @@ jobs:
             ansible-galaxy collection install amazon.aws
         - name: Run deployment Ansible playbook
           run: |
-            
-            
-
