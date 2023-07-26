@@ -53,6 +53,7 @@ jobs:
             name: latest
             path: ./front.zip
     deploy-app:
+      needs: deploy-infrastructure
       runs-on: self-hosted
       steps:
         - name: Install Ansible and dependencies
