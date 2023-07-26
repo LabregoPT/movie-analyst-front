@@ -4,24 +4,7 @@ on:
     push:
         branches:
             - "master"
-
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout code
-              uses: actions/checkout@v3
-            - name: Setup node
-              uses: actions/setup-node@v3
-            - name: Install packages
-              run: |
-                npm update
-                npm install
-            - name: Upload artifact
-              uses: actions/upload-artifact@v3
-              with:
-                name: latest
-                path: .
     deploy-infrastructure:
         runs-on: ubuntu-latest
         steps:
@@ -45,8 +28,40 @@ jobs:
               env:
                 TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
                 TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    upload-artifact:
+      runs-on: self-hosted
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v3
+        - name: Setup node
+          uses: actions/setup-node@v3
+        - name: Install packages
+          run: |
+            npm update
+            npm install
+        - name: Upload artifact
+          uses: actions/upload-artifact@v3
+          with:
+            name: latest
+            path: |
+              .
+              !./.github/**
+              !./ansible/**
+              !./.gitignore
     deploy-app:
       runs-on: self-hosted
       steps:
-        - name: Check running on Selfhosted service
-          run: echo "Hello world!"
+        - name: Install Ansible and dependencies
+          run: |
+            sudo apt update
+            sudo apt install software-properties-common
+            sudo add-apt-repository --yes --update ppa:ansible/ansible
+            sudo apt install ansible
+            ansible-galaxy collection install amazon.aws
+        - name: Run deployment Ansible playbook
+          run: |
+            pwd
+            dir
+            cd ansible
+            
+
