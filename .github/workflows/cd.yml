@@ -45,3 +45,8 @@ jobs:
               env:
                 TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
                 TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    deploy-app:
+      runs-on: self-hosted
+      steps:
+        - name: Check running on Selfhosted service
+          run: echo "Hello world!"
