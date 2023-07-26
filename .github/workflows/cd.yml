@@ -3,7 +3,9 @@ on:
     workflow_dispatch:
     push:
         branches:
+          #For dev only, remove when merging to master
             - "master"
+            - "feature/add-deployment"
 jobs:
     deploy-infrastructure:
         runs-on: ubuntu-latest
