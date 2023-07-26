@@ -39,7 +39,8 @@ jobs:
           with:
             ref: feature/add-deployment
         - name: Setup node
-          uses: actions/setup-node@v3
+          run: |
+            sudo apt install node --yes
         - name: Install packages
           run: |
             npm update
