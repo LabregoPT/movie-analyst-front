@@ -68,4 +68,7 @@ jobs:
             ansible-galaxy collection install amazon.aws
         - name: Run deployment Ansible playbook
           run: |
-            echo "Running from dev branch!"
+            cd ansible
+            ansible-inventory -i aws_ec2.yml --list
+          env:
+            AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
