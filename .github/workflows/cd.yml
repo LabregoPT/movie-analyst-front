@@ -78,4 +78,6 @@ jobs:
           with:
             name: latest
         - name: Display current workfile
-          run: pwd | dir
+          run: |
+            pwd
+            ls
