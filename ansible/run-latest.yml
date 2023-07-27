@@ -8,7 +8,10 @@
   - name: Stop all processes
     shell: "killall node -w"
     ignore_errors: true
-    
+  - name: Install node
+    apt:
+      name: nodejs
+      update_cache: yes
   - name: Run user server
     shell:
       cmd: nohup node /home/ubuntu/front/server.js &
