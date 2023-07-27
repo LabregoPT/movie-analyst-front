@@ -3,9 +3,7 @@ on:
     workflow_dispatch:
     push:
         branches:
-          #For dev only, remove when merging to master
             - "master"
-            - "feature/add-deployment"
 jobs:
     deploy-infrastructure:
         runs-on: ubuntu-latest
@@ -35,9 +33,6 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
-          #For dev only, remove when merging to master
-          with:
-            ref: feature/add-deployment
         - name: Setup node
           uses: actions/setup-node@v3
         - name: Install packages
@@ -59,9 +54,6 @@ jobs:
       steps:
         - name: Obtain code from repo
           uses: actions/checkout@v3
-          #For dev only, remove when merging
-          with:
-            ref: feature/add-deployment
         - name: Install Ansible and dependencies
           run: |
             sudo apt update
