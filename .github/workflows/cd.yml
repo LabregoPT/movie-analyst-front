@@ -31,7 +31,7 @@ jobs:
                 TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
                 TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     upload-artifact:
-      runs-on: self-hosted
+      runs-on: ubuntu-latest
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -39,9 +39,7 @@ jobs:
           with:
             ref: feature/add-deployment
         - name: Setup node
-          run: |
-            sudo apt install nodejs --yes
-            sudo apt install npm --yes
+          uses: actions/setup-node@v3
         - name: Install packages
           run: |
             npm update
@@ -56,7 +54,7 @@ jobs:
             name: latest
             path: ./front.zip
     deploy-app:
-      needs: deploy-infrastructure
+      needs: [deploy-infrastructure, upload-artifact]
       runs-on: self-hosted
       steps:
         - name: Install Ansible and dependencies
@@ -68,10 +66,16 @@ jobs:
             ansible-galaxy collection install amazon.aws
             sudo apt install python3-pip --yes
             python3 -m pip install boto3
-        - name: Find objective machines and deploy artifact
+        - name: Find objective machines
           run: |
             cd ansible
             ansible-inventory -i aws_ec2.yml --graph
           env:
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: Download artifact in machine
+          uses: actions/download-artifact@v3
+          with:
+            name: latest
+        - name: Display current workfile
+          run: pwd | dir
