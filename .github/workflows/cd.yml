@@ -41,6 +41,7 @@ jobs:
         - name: Setup node
           run: |
             sudo apt install nodejs --yes
+            sudo apt install npm --yes
         - name: Install packages
           run: |
             npm update
