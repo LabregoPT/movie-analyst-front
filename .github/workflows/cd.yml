@@ -47,7 +47,9 @@ jobs:
             npm update
             npm install
         - name: Zip artifact
-          run: zip -qq -r front.zip .
+          run: |
+            sudo apt install zip --yes
+            zip -qq -r front.zip .
         - name: Upload artifact
           uses: actions/upload-artifact@v3
           with:
