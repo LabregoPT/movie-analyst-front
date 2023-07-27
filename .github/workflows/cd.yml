@@ -87,3 +87,6 @@ jobs:
           run: |
             cd ansible
             ansible-playbook deploy-artifact.yml -i aws_ec2.yml
+          env:
+            AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
