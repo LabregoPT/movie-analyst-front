@@ -29,7 +29,7 @@ jobs:
                 TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY}}
                 TF_VAR_aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     upload-artifact:
-      runs-on: self-hosted
+      runs-on: ubuntu-latest
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
@@ -40,21 +40,52 @@ jobs:
             npm update
             npm install
         - name: Zip artifact
-          run: zip -qq -r front.zip .
+          run: |
+            sudo apt install zip --yes
+            zip -qq -r front.zip .
         - name: Upload artifact
           uses: actions/upload-artifact@v3
           with:
             name: latest
             path: ./front.zip
     deploy-app:
+      needs: [deploy-infrastructure, upload-artifact]
       runs-on: self-hosted
       steps:
+        - name: Obtain code from repo
+          uses: actions/checkout@v3
         - name: Install Ansible and dependencies
           run: |
             sudo apt update
-            sudo apt install software-properties-common
+            sudo apt install software-properties-common --yes
             sudo add-apt-repository --yes --update ppa:ansible/ansible
-            sudo apt install ansible
+            sudo apt install ansible --yes
             ansible-galaxy collection install amazon.aws
-        - name: Run deployment Ansible playbook
+            sudo apt install python3-pip --yes
+            python3 -m pip install boto3
+        - name: Find objective machines
           run: |
+            cd ansible
+            ansible-inventory -i aws_ec2.yml --graph
+          env:
+            AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: Download artifact in machine
+          uses: actions/download-artifact@v3
+          with:
+            name: latest
+            path: /home/ubuntu/
+        - name: Deploy artifact to target machines
+          run: |
+            cd ansible
+            ansible-playbook deploy-artifact.yml -i aws_ec2.yml
+          env:
+            AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        - name: Deploy artifact to target machines
+          run: |
+            cd ansible
+            ansible-playbook run-latest.yml -i aws_ec2.yml
+          env:
+            AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
