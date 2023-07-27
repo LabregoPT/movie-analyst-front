@@ -4,23 +4,21 @@
   hosts: _front
   remote_user: ubuntu
   become: yes
-  
   tasks:
-      
   - name: Remove app folder if exists
     shell:
       cmd: rm -rf /home/ubuntu/front
-      
   - name: Create clean app folder
     shell:
       cmd: mkdir -p /home/ubuntu/front
-  
   - name: install unzip
     apt:
       name: unzip
       update_cache: yes
-      
-  - name: Extract UI.zip on app folder
+  - name: Extract front.zip on app folder
     unarchive:
-      src: ~/UI.zip
-      dest: /home/ubuntu/app
+      src: /home/ubuntu/front.zip
+      dest: /home/ubuntu/front
+  - name: Display directory
+    shell:
+      cmd: ls /home/ubuntu/front
