@@ -1,0 +1,18 @@
+---
+- name: Run latest version
+  hosts: _front
+  remote_user: ubuntu
+  become: yes
+  tasks:
+  
+  - name: Stop all processes
+    shell: "killall node -w"
+    ignore_errors: true
+    
+  - name: Run user server
+    shell:
+      cmd: nohup node /home/ubuntu/front/server.js &
+  
+  - name: Run admin server
+    shell:
+      cmd: nohup node /home/ubuntu/front/admin-server.js &

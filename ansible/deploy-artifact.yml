@@ -19,6 +19,3 @@
     unarchive:
       src: /home/ubuntu/front.zip
       dest: /home/ubuntu/front
-  - name: Display directory
-    shell:
-      cmd: ls /home/ubuntu/front
