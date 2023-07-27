@@ -68,10 +68,10 @@ jobs:
             ansible-galaxy collection install amazon.aws
             sudo apt install python3-pip --yes
             python3 -m pip install boto3
-        - name: Run deployment Ansible playbook
+        - name: Find objective machines and deploy artifact
           run: |
             cd ansible
-            ansible-inventory -i aws_ec2.yml --list
+            ansible-inventory -i aws_ec2.yml --graph
           env:
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
             AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
