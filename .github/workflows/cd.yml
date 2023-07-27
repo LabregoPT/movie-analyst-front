@@ -74,3 +74,4 @@ jobs:
             ansible-inventory -i aws_ec2.yml --list
           env:
             AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
